@@ -10,15 +10,15 @@ async function scrapeContent() {
   const page = await browser.newPage();
 
   // Load the web page
-  await page.goto('https://leagueoflegends.fandom.com/wiki/Ahri/LoL'); // Replace with your URL
+  await page.goto('https://leagueoflegends.fandom.com/wiki/Ahri/LoL');
 
-  // Get all option values from the select element with id 'lvl_Ahri'
+
   const optionValues = await page.evaluate(() => {
     const options = document.querySelectorAll('select#lvl_Ahri option');
     return Array.from(options).map(option => option.value);
   });
 
-  // Container for all content
+
   const contentMap = {};
 
   // Loop through each option and extract content
@@ -27,7 +27,7 @@ async function scrapeContent() {
     // Introduce a manual delay
     await page.evaluate(() => new Promise(resolve => setTimeout(resolve, 500)));
     const content = await page.evaluate(() => {
-      const contentSpan = document.querySelector('#HealthRegen_Ahri_lvl');
+      const contentSpan = document.querySelector(`#Health_${name}_lvl`);
       return contentSpan ? contentSpan.innerText.trim() : null;
     });
     contentMap[value] = content;
