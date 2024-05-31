@@ -3,40 +3,6 @@ const cheerio = require('cheerio');
 const mongoose = require('mongoose');
 const connectDB = require('../db');
 const Champion = require('../models/Champion');
-const puppeteer = require('puppeteer');
-
-async function scrapeContent() {
-  const browser = await puppeteer.launch();
-  const page = await browser.newPage();
-
-  // Load the web page
-  await page.goto('https://leagueoflegends.fandom.com/wiki/Ahri/LoL');
-
-
-  const optionValues = await page.evaluate(() => {
-    const options = document.querySelectorAll('select#lvl_Ahri option');
-    return Array.from(options).map(option => option.value);
-  });
-
-
-  const contentMap = {};
-
-  // Loop through each option and extract content
-  for (const value of optionValues) {
-    await page.select('select#lvl_Ahri', value);
-    // Introduce a manual delay
-    await page.evaluate(() => new Promise(resolve => setTimeout(resolve, 500)));
-    const content = await page.evaluate(() => {
-      const contentSpan = document.querySelector(`#Health_${name}_lvl`);
-      return contentSpan ? contentSpan.innerText.trim() : null;
-    });
-    contentMap[value] = content;
-  }
-
-  console.log(contentMap);
-
-  await browser.close();
-}
 
 const getChampionList = async () => {
     try {
